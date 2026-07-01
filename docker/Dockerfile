@@ -15,7 +15,7 @@ COPY src/app/Http/Controllers/RegisterController.php \
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader && \
     php artisan package:discover --ansi
 
-FROM php:8.3-fpm AS runtime
+FROM php:8.4-fpm AS runtime
 
 RUN set -eux; \
     apt-get update && apt-get install -y --no-install-recommends \

@@ -28,6 +28,8 @@ sysctl -p /etc/sysctl.d/99-postgres.conf
 
 # 3. Setup Users
 sudo -u postgres psql <<'SQL'
+SET password_encryption = 'md5';
+
 DO $$
 BEGIN
    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'repmgr') THEN
