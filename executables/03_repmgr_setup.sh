@@ -7,6 +7,7 @@ NODE_ROLE="${1:-}"  # primary | standby | witness
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 PRIMARY_IP="163.61.156.98"
+PG_CONF_DIR="/etc/postgresql/16/main"
 
 install_postgres_packages() {
     export DEBIAN_FRONTEND=noninteractive
@@ -31,6 +32,15 @@ install_pgpass() {
 EOF
     chown postgres:postgres /var/lib/postgresql/.pgpass
     chmod 0600 /var/lib/postgresql/.pgpass
+}
+
+apply_postgres_tuning() {
+    sed -i '/# BEGIN assessment-postgresql-tuning/,/# END assessment-postgresql-tuning/d' "$PG_CONF_DIR/postgresql.conf"
+    {
+        echo "# BEGIN assessment-postgresql-tuning"
+        grep -vE '^[[:space:]]*#|^[[:space:]]*$' "$REPO_ROOT/config/postgresql.conf"
+        echo "# END assessment-postgresql-tuning"
+    } >> "$PG_CONF_DIR/postgresql.conf"
 }
 
 start_repmgrd() {
@@ -64,6 +74,7 @@ case "$NODE_ROLE" in
     echo "Cloning and registering standby..."
     install_repmgr_conf "$REPO_ROOT/config/repmgr/repmgr_standby.conf"
     install_pgpass
+    apply_postgres_tuning
     install -o root -g root -m 0755 "$REPO_ROOT/executables/failover_pgbouncer.sh" /usr/local/bin/failover_pgbouncer.sh
     systemctl stop postgresql || true
     sudo -u postgres rm -rf /var/lib/postgresql/16/main
