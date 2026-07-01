@@ -1,17 +1,15 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 cd /var/www/html
 
-# Generate app key if not set
-if [ -z "$APP_KEY" ]; then
-    php artisan key:generate --force
+if [ -z "${APP_KEY:-}" ]; then
+    export APP_KEY
+    APP_KEY="$(php artisan key:generate --show)"
 fi
 
-# Run migrations
 php artisan migrate --force
 
-# Cache config and routes for production performance
 php artisan config:cache
 php artisan route:cache
 
