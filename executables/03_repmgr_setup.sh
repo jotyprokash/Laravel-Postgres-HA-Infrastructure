@@ -34,8 +34,16 @@ EOF
 }
 
 start_repmgrd() {
-    if [ -f /etc/default/repmgrd ]; then
+    touch /etc/default/repmgrd
+    if grep -q '^REPMGRD_ENABLED=' /etc/default/repmgrd; then
         sed -i 's/^REPMGRD_ENABLED=.*/REPMGRD_ENABLED=yes/' /etc/default/repmgrd
+    else
+        echo 'REPMGRD_ENABLED=yes' >> /etc/default/repmgrd
+    fi
+    if grep -q '^REPMGRD_CONF=' /etc/default/repmgrd; then
+        sed -i 's#^REPMGRD_CONF=.*#REPMGRD_CONF="/etc/repmgr.conf"#' /etc/default/repmgrd
+    else
+        echo 'REPMGRD_CONF="/etc/repmgr.conf"' >> /etc/default/repmgrd
     fi
     systemctl enable repmgrd
     systemctl restart repmgrd
