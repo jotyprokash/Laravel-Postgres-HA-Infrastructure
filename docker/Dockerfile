@@ -6,6 +6,7 @@ RUN composer create-project --prefer-dist --no-interaction laravel/laravel .
 
 COPY src/routes/api.php routes/api.php
 COPY src/routes/web.php routes/web.php
+COPY src/bootstrap/app.php bootstrap/app.php
 COPY src/database/migrations/2024_01_01_000000_create_registrations_table.php \
      database/migrations/2024_01_01_000000_create_registrations_table.php
 COPY src/resources/views/register.blade.php resources/views/register.blade.php
