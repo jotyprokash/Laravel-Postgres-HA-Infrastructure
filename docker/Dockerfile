@@ -17,10 +17,11 @@ RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoload
 
 FROM php:8.3-fpm AS runtime
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN set -eux; \
+    apt-get update && apt-get install -y --no-install-recommends \
         nginx supervisor libpq-dev libzip-dev libonig-dev && \
-    docker-php-ext-install pdo pdo_pgsql pgsql mbstring zip opcache && \
-    apt-mark manual nginx supervisor libpq5 libzip4 libonig5 && \
+    docker-php-ext-install -j"$(nproc)" pdo pdo_pgsql pgsql mbstring zip opcache && \
+    apt-mark manual nginx supervisor libpq5 libzip5 libonig5 && \
     apt-get purge -y --auto-remove libpq-dev libzip-dev libonig-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
