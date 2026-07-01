@@ -4,7 +4,11 @@ Production-grade deployment of a Laravel application backed by a highly availabl
 
 ## Architecture
 
-![Architecture Diagram](architecture.png)
+<p align="center">
+  <img src="./architecture.svg" alt="Laravel PostgreSQL HA Architecture" width="1100">
+</p>
+
+<p align="center"><strong>Three-node Laravel and PostgreSQL HA architecture with PgBouncer, streaming replication, repmgr failover, and witness quorum.</strong></p>
 
 * **Application Tier (VM-1):** Dockerized Laravel API routing through PgBouncer for strict connection pooling.
 * **Database Tier (VM-2 & VM-3):** Native PostgreSQL 16 configured with asynchronous streaming replication.
