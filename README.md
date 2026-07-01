@@ -1,42 +1,68 @@
-# High-Availability Laravel Infrastructure
+# Laravel PostgreSQL HA Infrastructure
 
-Production-grade deployment of a Laravel application backed by a highly available PostgreSQL cluster. Architected for high-concurrency registration traffic with PgBouncer-backed write-path protection and failover validation.
+[![Laravel](https://img.shields.io/badge/Laravel-API-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.4_FPM-777BB4?style=flat-square&logo=php&logoColor=white)](https://www.php.net)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![PgBouncer](https://img.shields.io/badge/PgBouncer-Pooling-336791?style=flat-square)](https://www.pgbouncer.org)
+[![repmgr](https://img.shields.io/badge/repmgr-HA-2F5D7C?style=flat-square)](https://www.repmgr.org)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com)
+[![Nginx](https://img.shields.io/badge/Nginx-Proxy-009639?style=flat-square&logo=nginx&logoColor=white)](https://nginx.org)
+[![Cloudflare](https://img.shields.io/badge/Cloudflare-HTTPS-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://www.cloudflare.com)
+[![HA](https://img.shields.io/badge/HA-Validated-success?style=flat-square)](documentation/high_availability.md)
+[![Failover](https://img.shields.io/badge/Failover-Tested-success?style=flat-square)](documentation/high_availability.md)
+[![Load Test](https://img.shields.io/badge/Load-100K_Requests-informational?style=flat-square)](documentation/database_optimization.md)
+[![Automation](https://img.shields.io/badge/Automation-Bash_Runbooks-4EAA25?style=flat-square&logo=gnubash&logoColor=white)](documentation/operations_runbook.md)
+
+Three-node Linux infrastructure for a Laravel registration service backed by PostgreSQL 16 high availability, PgBouncer connection pooling, repmgr failover, and Cloudflare-proxied HTTPS.
 
 ## Architecture
 
 <p align="center">
-  <img src="./architecture.svg" alt="Laravel PostgreSQL HA Architecture" width="1100">
+  <img src="./architecture.svg?v=20260702-dark" alt="Laravel PostgreSQL HA Architecture" width="1100">
 </p>
 
-<p align="center"><strong>Three-node Laravel and PostgreSQL HA architecture with PgBouncer, streaming replication, repmgr failover, and witness quorum.</strong></p>
+| VM | Hostname | IP | Role |
+| --- | --- | --- | --- |
+| VM-1 | `app-gateway` | `163.61.156.56` | Cloudflare origin, Dockerized Laravel/Nginx, PgBouncer, repmgr witness |
+| VM-2 | `db-primary` | `163.61.156.98` | Initial PostgreSQL primary; rejoined as standby after failover validation |
+| VM-3 | `db-standby` | `163.61.156.112` | Initial PostgreSQL standby; promoted to active primary during failover validation |
 
-* **Application Tier (VM-1):** Dockerized Laravel API routing through PgBouncer for strict connection pooling.
-* **Database Tier (VM-2 & VM-3):** Native PostgreSQL 16 configured with asynchronous streaming replication.
-* **High Availability:** Managed via `repmgr`, featuring automatic failover and a witness node to prevent split-brain partition scenarios.
+## Public Endpoint
 
-## Deployment
+The application is available through Cloudflare-proxied HTTPS:
 
-Execute the provisioning executables sequentially on fresh Ubuntu 22.04 servers:
-
-```bash
-# 1. Base OS Security & Hardening
-bash executables/00_security_hardening.sh app # VM-1
-bash executables/00_security_hardening.sh db  # VM-2 and VM-3
-
-# 2. Database Provisioning
-bash executables/01_postgres_primary.sh     # Primary (VM-2)
-bash executables/02_postgres_standby.sh     # Standby (VM-3)
-
-# 3. High Availability Cluster Initialization
-bash executables/03_repmgr_setup.sh primary # VM-2
-bash executables/03_repmgr_setup.sh standby # VM-3
-bash executables/03_repmgr_setup.sh witness # VM-1
-
-# 4. Application & Pooler Deployment
-bash executables/04_app_deployment.sh       # App Server (VM-1)
-
-# 5. End-to-End Validation
-bash executables/05_validate.sh
+```text
+https://app.jotysdevsecopslab.xyz/
 ```
 
-> **Note:** Detailed technical reasoning for OS/Kernel tuning, database parameter adjustments, and security posture are available in the `documentation/` directory.
+<p align="center">
+  <img src="./evidence/screenshots/10-domain-https-frontend-cloudflare-proxied.png" alt="Cloudflare HTTPS Laravel frontend" width="900">
+</p>
+
+## What Was Implemented
+
+- Laravel registration UI and `/api/register` endpoint.
+- Docker multi-stage PHP 8.4 FPM + Nginx application image.
+- PgBouncer transaction pooling on VM-1.
+- PostgreSQL 16 native installation on VM-2 and VM-3.
+- repmgr primary/standby/witness topology.
+- Streaming replication and controlled failover validation.
+- PgBouncer repointing after failover.
+- Old primary safe rejoin as standby.
+- Cloudflare-proxied HTTPS for the public endpoint.
+- 100,000 registration write requests validated with 1,000 concurrent clients.
+
+## Documentation
+
+- [Architecture and technical decisions](documentation/architecture.md)
+- [Deployment and reproduction steps](documentation/deployment.md)
+- [High availability and failover runbook](documentation/high_availability.md)
+- [PostgreSQL optimization and load test results](documentation/database_optimization.md)
+- [Security controls](documentation/security.md)
+- [Validation matrix](documentation/validation.md)
+- [Operations runbook](documentation/operations_runbook.md)
+- [Evidence index](documentation/evidence_index.md)
+
+## Notes
+
+The provided three-VM environment validates the HA write path under controlled load. Sustained 100K writes/sec would require both vertical scaling of the database host/storage and horizontal scaling of the application tier, plus distributed load generation and possibly queue/batch ingestion.

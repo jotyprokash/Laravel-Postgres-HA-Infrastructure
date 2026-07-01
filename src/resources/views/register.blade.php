@@ -45,15 +45,6 @@
             box-shadow: 0 24px 70px rgba(0, 0, 0, .42);
         }
 
-        .eyebrow {
-            margin-bottom: 8px;
-            color: var(--accent);
-            font-size: .74rem;
-            font-weight: 700;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-        }
-
         h1 {
             margin-bottom: 6px;
             color: var(--text);
@@ -118,17 +109,6 @@
         button:hover { background: var(--accent-strong); }
         button:active { transform: translateY(1px); }
 
-        .meta {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            margin-top: 18px;
-            padding-top: 16px;
-            border-top: 1px solid var(--line);
-            color: var(--muted);
-            font-size: .78rem;
-        }
-
         .msg {
             display: none;
             margin-top: 16px;
@@ -144,13 +124,11 @@
         @media (max-width: 520px) {
             body { padding: 16px; }
             .card { padding: 22px; }
-            .meta { flex-direction: column; gap: 6px; }
         }
     </style>
 </head>
 <body>
 <div class="card">
-    <div class="eyebrow">HA Registration API</div>
     <h1>Registration Gateway</h1>
     <p class="subtitle">Submit user details through the Laravel service backed by PgBouncer and PostgreSQL streaming replication.</p>
 
@@ -174,10 +152,6 @@
         <button type="submit">Register</button>
     </form>
     <div id="msg" class="msg"></div>
-    <div class="meta">
-        <span>Endpoint: /api/register</span>
-        <span>Database: PostgreSQL HA</span>
-    </div>
 </div>
 <script>
 document.getElementById('regForm').addEventListener('submit', async (e) => {
