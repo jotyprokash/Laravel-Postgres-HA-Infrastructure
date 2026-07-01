@@ -1,15 +1,21 @@
 #!/bin/bash
 # 04_app_deployment.sh
 # Run this on VM-1 (Application Server)
-set -e
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 echo "Provisioning Application Server (VM-1)..."
 
 # 1. Install Docker
+export DEBIAN_FRONTEND=noninteractive
 apt-get update -y
 apt-get install -y ca-certificates curl gnupg pgbouncer
 install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+if [ ! -f /etc/apt/keyrings/docker.gpg ]; then
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+fi
 chmod a+r /etc/apt/keyrings/docker.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 apt-get update -y
@@ -25,14 +31,15 @@ EOF
 sysctl -p /etc/sysctl.d/99-app.conf
 
 # 3. Configure PgBouncer
-cp config/pgbouncer.ini /etc/pgbouncer/pgbouncer.ini
+install -o postgres -g postgres -m 0640 "$REPO_ROOT/config/pgbouncer.ini" /etc/pgbouncer/pgbouncer.ini
 HASH=$(echo -n "laravel_passlaravel_db" | md5sum | awk '{print $1}')
 echo "\"laravel_db\" \"md5${HASH}\"" > /etc/pgbouncer/userlist.txt
+chown postgres:postgres /etc/pgbouncer/userlist.txt
+chmod 0600 /etc/pgbouncer/userlist.txt
 systemctl restart pgbouncer
 systemctl enable pgbouncer
 
 # 4. Build and start the Laravel container
-cd /opt/tenbyte-devops-assessment
-docker compose -f docker/docker-compose.yml up -d --build
+docker compose -f "$REPO_ROOT/docker/docker-compose.yml" up -d --build
 
 echo "Application deployed. Access at http://163.61.156.56"

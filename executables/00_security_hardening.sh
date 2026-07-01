@@ -1,17 +1,32 @@
 #!/bin/bash
 # 00_security_hardening.sh
-# Run this on all nodes (VM-1, VM-2, VM-3)
-set -e
+# Run as root:
+#   bash executables/00_security_hardening.sh app
+#   bash executables/00_security_hardening.sh db
+set -euo pipefail
 
-echo "Applying system security hardening..."
+ROLE="${1:-}"
+CLUSTER_CIDR="163.61.156.0/24"
+DOCKER_CIDR="172.16.0.0/12"
+
+if [[ "$ROLE" != "app" && "$ROLE" != "db" ]]; then
+    echo "Usage: $0 {app|db}"
+    exit 1
+fi
+
+echo "Applying system security hardening for role: $ROLE"
 
 # 1. Update and upgrade packages
-apt-get update -y && apt-get upgrade -y
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -y
+apt-get upgrade -y
+apt-get install -y ufw sudo
 
 # 2. Add deployer user
 if ! id "deployer" &>/dev/null; then
     useradd -m -s /bin/bash deployer
     echo "deployer ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/deployer
+    chmod 0440 /etc/sudoers.d/deployer
 fi
 
 # 3. Configure Firewall (UFW)
@@ -19,10 +34,18 @@ ufw --force reset
 ufw default deny incoming
 ufw default allow outgoing
 ufw allow 22/tcp
-ufw allow 80/tcp
-ufw allow 443/tcp
-ufw allow 5432/tcp  # PostgreSQL
-ufw allow 5433/tcp  # PgBouncer / Repmgr custom ports if needed
+
+if [[ "$ROLE" == "app" ]]; then
+    ufw allow 80/tcp
+    ufw allow 443/tcp
+    ufw allow from "$DOCKER_CIDR" to any port 6432 proto tcp comment 'PgBouncer from Docker bridge'
+    ufw allow from "$CLUSTER_CIDR" to any port 5432 proto tcp comment 'repmgr witness metadata'
+fi
+
+if [[ "$ROLE" == "db" ]]; then
+    ufw allow from "$CLUSTER_CIDR" to any port 5432 proto tcp comment 'PostgreSQL cluster traffic'
+fi
+
 ufw --force enable
 
 # 4. SSH Hardening (Disable password auth after key setup)

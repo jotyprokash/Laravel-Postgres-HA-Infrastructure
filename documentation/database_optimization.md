@@ -1,13 +1,15 @@
-# PostgreSQL Optimization for 100K/s Writes
+# PostgreSQL Optimization for High-Concurrency Writes
 
-Achieving 100K/s writes on a standard relational database requires converting blocking disk I/O into asynchronous memory operations, while managing risk.
+The provided database VMs have approximately 8 GB RAM and 96 GB disk. The tuning below is designed for high-concurrency registration writes behind PgBouncer while keeping memory pressure predictable during load testing.
 
 ## Key Tuning Parameters (`postgresql.conf`)
 
 | Parameter | Value | Justification |
 | :--- | :--- | :--- |
 | `synchronous_commit` | `off` | **Critical.** Returns success to the client before WAL is flushed to disk. Essential for high throughput, though a hard OS crash could lose milliseconds of data. |
-| `shared_buffers` | `4GB` | Allocates ~25% of system RAM for caching data blocks, preventing constant disk reads. |
+| `shared_buffers` | `4GB` | Aggressive cache allocation for a dedicated 8 GB database VM. PgBouncer limits backend concurrency so PostgreSQL does not need thousands of server processes. |
+| `work_mem` | `8MB` | Keeps per-operation memory bounded under concurrent load. Registration inserts do not require large sort/hash memory. |
+| `effective_cache_size` | `6GB` | Planner hint aligned to the available OS cache on an 8 GB VM. |
 | `wal_buffers` | `16MB` | Buffers WAL records in memory before writing to disk. Larger buffer = fewer I/O interruptions. |
 | `max_wal_size` | `4GB` | Allows WAL to grow significantly before forcing a checkpoint. Reduces checkpoint I/O spikes. |
 | `checkpoint_timeout` | `15min` | Delays checkpoints to group I/O operations, drastically improving write latency. |
@@ -19,4 +21,4 @@ Achieving 100K/s writes on a standard relational database requires converting bl
 *   `net.core.somaxconn = 65535`
 *   `fs.file-max = 2097152`
 *   `net.ipv4.tcp_tw_reuse = 1`
-*(Ensures we do not exhaust ephemeral ports or file descriptors during the 100K concurrent load test).*
+*(Reduces connection backlog, file descriptor, and TCP reuse bottlenecks during high-concurrency load testing).*

@@ -1,6 +1,6 @@
 # High-Availability Laravel Infrastructure
 
-Production-grade deployment of a Laravel application backed by a highly available PostgreSQL cluster. Architected specifically to handle extreme burst traffic (100K/s concurrent write operations).
+Production-grade deployment of a Laravel application backed by a highly available PostgreSQL cluster. Architected for high-concurrency registration traffic with PgBouncer-backed write-path protection and failover validation.
 
 ## Architecture
 
@@ -19,8 +19,9 @@ Production-grade deployment of a Laravel application backed by a highly availabl
 Execute the provisioning executables sequentially on fresh Ubuntu 22.04 servers:
 
 ```bash
-# 1. Base OS Security & Hardening (All Nodes)
-bash executables/00_security_hardening.sh
+# 1. Base OS Security & Hardening
+bash executables/00_security_hardening.sh app # VM-1
+bash executables/00_security_hardening.sh db  # VM-2 and VM-3
 
 # 2. Database Provisioning
 bash executables/01_postgres_primary.sh     # Primary (VM-2)
