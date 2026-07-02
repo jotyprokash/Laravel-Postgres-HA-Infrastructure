@@ -35,15 +35,9 @@ The application is available through Cloudflare-proxied HTTPS:
 https://app.jotysdevsecopslab.xyz/
 ```
 
-Cloudflare edge delivery is HTTP/3 verified from browser DevTools, with HTTP/2 available as fallback for unsupported clients.
-
-<p align="center">
-  <img src="./evidence/screenshots/10-domain-https-frontend-cloudflare-proxied.png" alt="Cloudflare HTTPS Laravel frontend" width="900">
-</p>
-
 **Edge Protocol Evidence**
 
-Browser DevTools verified Cloudflare edge delivery over HTTP/3 (`h3`). Curl/terminal clients that do not negotiate HTTP/3 continue to receive HTTP/2 fallback.
+Browser DevTools verified Cloudflare edge delivery over HTTP/3 (`h3`), with HTTP/2 available as fallback for unsupported clients.
 
 <p align="center">
   <img src="./evidence/screenshots/15-cloudflare-http3-browser-devtools-verified.png" alt="Cloudflare HTTP/3 edge protocol verified in browser DevTools" width="900">
