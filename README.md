@@ -7,7 +7,7 @@
 [![repmgr](https://img.shields.io/badge/repmgr-HA-2F5D7C?style=flat-square)](https://www.repmgr.org)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com)
 [![Nginx](https://img.shields.io/badge/Nginx-Proxy-009639?style=flat-square&logo=nginx&logoColor=white)](https://nginx.org)
-[![Cloudflare](https://img.shields.io/badge/Cloudflare-HTTPS-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://www.cloudflare.com)
+[![Cloudflare](https://img.shields.io/badge/Cloudflare-HTTP%2F3_Edge-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://www.cloudflare.com)
 [![HA](https://img.shields.io/badge/HA-Validated-success?style=flat-square)](documentation/high_availability.md)
 [![Failover](https://img.shields.io/badge/Failover-Tested-success?style=flat-square)](documentation/high_availability.md)
 [![Load Test](https://img.shields.io/badge/Load-100K_Requests-informational?style=flat-square)](documentation/database_optimization.md)
@@ -34,6 +34,8 @@ The application is available through Cloudflare-proxied HTTPS:
 ```text
 https://app.jotysdevsecopslab.xyz/
 ```
+
+Cloudflare edge delivery is HTTP/3 verified from browser DevTools, with HTTP/2 available as fallback for unsupported clients.
 
 <p align="center">
   <img src="./evidence/screenshots/10-domain-https-frontend-cloudflare-proxied.png" alt="Cloudflare HTTPS Laravel frontend" width="900">

@@ -52,6 +52,24 @@ Evidence:
 
 ![Public HTTPS frontend](../evidence/screenshots/10-domain-https-frontend-cloudflare-proxied.png)
 
+### Edge Protocol Validation
+
+Browser DevTools confirmed that the public document request is served over HTTP/3 at the Cloudflare edge:
+
+```text
+app.jotysdevsecopslab.xyz -> 200 -> h3
+```
+
+![Cloudflare HTTP/3 edge protocol verified](../evidence/screenshots/15-cloudflare-http3-edge-browser-verified.png)
+
+The terminal check returned HTTP/2:
+
+```text
+curl -I https://app.jotysdevsecopslab.xyz/ -> HTTP/2 200
+```
+
+Both results are valid. Cloudflare negotiates HTTP/3 with capable browsers, while clients that do not support HTTP/3, including the installed curl build on the workstation, fall back to HTTP/2. This validates HTTP/3 edge delivery without losing compatibility for HTTP/2 clients.
+
 A write through the public HTTPS domain also reached PostgreSQL and replicated:
 
 ![HTTPS domain write and replication](../evidence/screenshots/11-https-domain-api-write-and-standby-replication.png)

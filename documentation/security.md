@@ -83,6 +83,17 @@ Evidence:
 
 ![Cloudflare HTTPS frontend](../evidence/screenshots/10-domain-https-frontend-cloudflare-proxied.png)
 
+Cloudflare edge protocol validation:
+
+```text
+Browser DevTools: app.jotysdevsecopslab.xyz -> 200 -> h3
+curl -I: HTTP/2 200
+```
+
+This confirms browser-facing HTTP/3 at the Cloudflare edge. The curl result confirms the expected HTTP/2 fallback path for clients that do not negotiate HTTP/3.
+
+![Cloudflare HTTP/3 edge protocol verified](../evidence/screenshots/15-cloudflare-http3-edge-browser-verified.png)
+
 Current assessment mode:
 
 ```text
