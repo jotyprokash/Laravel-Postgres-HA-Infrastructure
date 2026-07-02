@@ -54,7 +54,7 @@ Browser DevTools verified Cloudflare edge delivery over HTTP/3 (`h3`), with HTTP
 - Controlled failover validated with PgBouncer repointing to the promoted primary.
 - Old primary safely rejoined as standby after failover.
 - Cloudflare-proxied HTTPS for the public endpoint.
-- 100,000 registration write requests validated with 1,000 concurrent clients.
+- 100,000 registration write requests successfully validated through the `/api/register` endpoint.
 
 ## Documentation
 

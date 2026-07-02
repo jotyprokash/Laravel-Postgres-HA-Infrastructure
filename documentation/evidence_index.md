@@ -29,3 +29,5 @@ This page keeps the screenshots discoverable without turning the README into a l
 | [14a-100k-registration-write-test-1k-concurrent-clients.png](../evidence/screenshots/14a-100k-registration-write-test-1k-concurrent-clients.png) | Load | 100K registration requests with 1K concurrency returned HTTP 201 |
 | [14b-post-100k-load-db-replication-health.png](../evidence/screenshots/14b-post-100k-load-db-replication-health.png) | Load | Replication and cluster health after load test |
 | [15-cloudflare-http3-browser-devtools-verified.png](../evidence/screenshots/15-cloudflare-http3-browser-devtools-verified.png) | Public access | Browser DevTools verified Cloudflare edge delivery over HTTP/3 (`h3`) |
+| [16-origin-direct-ip-blocked-host-header-allowed.png](../evidence/screenshots/16-origin-direct-ip-blocked-host-header-allowed.png) | Security | Direct IP requests are dropped while valid application Host requests are served |
+| [17-final-smoke-write-primary-standby-replication.png](../evidence/screenshots/17-final-smoke-write-primary-standby-replication.png) | Validation | Final public write persisted through PgBouncer and replicated from active primary to standby |

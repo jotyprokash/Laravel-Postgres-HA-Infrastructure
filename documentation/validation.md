@@ -117,7 +117,7 @@ Evidence:
 
 ![Standby promoted to primary](../evidence/screenshots/13a-standby-promoted-to-primary.png)
 
-PgBouncer was then repointed from the failed primary to the promoted primary:
+PgBouncer was then repointed from the unavailable primary to the promoted primary:
 
 ```bash
 sudo sed -i 's/host=163.61.156.98/host=163.61.156.112/' /etc/pgbouncer/pgbouncer.ini
@@ -149,6 +149,18 @@ Evidence:
 The old primary was recloned and rejoined as a standby following the promoted primary:
 
 ![Old primary rejoined as standby](../evidence/screenshots/13d-old-primary-rejoined-as-standby.png)
+
+## Final Smoke Validation
+
+A final public HTTPS registration write was validated through the live application path. The same row was confirmed through PgBouncer, on the active primary, and on the standby after replication:
+
+```text
+app-gateway -> PgBouncer -> active primary -> standby replication
+```
+
+Evidence:
+
+![Final smoke write and replication](../evidence/screenshots/17-final-smoke-write-primary-standby-replication.png)
 
 ## Load Validation
 

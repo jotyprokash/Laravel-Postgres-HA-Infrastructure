@@ -93,6 +93,8 @@ This is intentional. Serving a warning page would confirm that the public IP is 
 
 Evidence:
 
+![Origin direct IP blocked and valid Host allowed](../evidence/screenshots/16-origin-direct-ip-blocked-host-header-allowed.png)
+
 ![Cloudflare HTTPS frontend](../evidence/screenshots/10-domain-https-frontend-cloudflare-proxied.png)
 
 Cloudflare edge protocol validation:
