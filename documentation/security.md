@@ -92,7 +92,7 @@ curl -I: HTTP/2 200
 
 This confirms browser-facing HTTP/3 at the Cloudflare edge. The curl result confirms the expected HTTP/2 fallback path for clients that do not negotiate HTTP/3.
 
-![Cloudflare HTTP/3 edge protocol verified](../evidence/screenshots/15-cloudflare-http3-edge-browser-verified.png)
+![Cloudflare HTTP/3 edge protocol verified](../evidence/screenshots/15-cloudflare-http3-browser-devtools-verified.png)
 
 Current assessment mode:
 

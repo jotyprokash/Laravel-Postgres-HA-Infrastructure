@@ -60,7 +60,7 @@ Browser DevTools confirmed that the public document request is served over HTTP/
 app.jotysdevsecopslab.xyz -> 200 -> h3
 ```
 
-![Cloudflare HTTP/3 edge protocol verified](../evidence/screenshots/15-cloudflare-http3-edge-browser-verified.png)
+![Cloudflare HTTP/3 edge protocol verified](../evidence/screenshots/15-cloudflare-http3-browser-devtools-verified.png)
 
 The terminal check returned HTTP/2:
 

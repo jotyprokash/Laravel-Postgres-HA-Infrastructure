@@ -28,4 +28,4 @@ This page keeps the screenshots discoverable without turning the README into a l
 | [13d-old-primary-rejoined-as-standby.png](../evidence/screenshots/13d-old-primary-rejoined-as-standby.png) | Recovery | Old primary safely rejoined as standby |
 | [14a-100k-registration-write-test-1k-concurrent-clients.png](../evidence/screenshots/14a-100k-registration-write-test-1k-concurrent-clients.png) | Load | 100K registration requests with 1K concurrency returned HTTP 201 |
 | [14b-post-100k-load-db-replication-health.png](../evidence/screenshots/14b-post-100k-load-db-replication-health.png) | Load | Replication and cluster health after load test |
-| [15-cloudflare-http3-edge-browser-verified.png](../evidence/screenshots/15-cloudflare-http3-edge-browser-verified.png) | Public access | Browser DevTools verified Cloudflare edge delivery over HTTP/3 (`h3`) |
+| [15-cloudflare-http3-browser-devtools-verified.png](../evidence/screenshots/15-cloudflare-http3-browser-devtools-verified.png) | Public access | Browser DevTools verified Cloudflare edge delivery over HTTP/3 (`h3`) |
