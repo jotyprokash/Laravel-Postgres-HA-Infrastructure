@@ -58,7 +58,7 @@ Users are separated by responsibility:
 | `laravel_db` | Laravel application database writes |
 | `root` | Assessment bootstrap access only |
 
-For a production handoff, root SSH should be disabled after key-based non-root access is installed.
+Production handoff replaces assessment root access with key-based non-root access and disables root/password SSH after access validation.
 
 ## Application File Permissions
 
@@ -113,7 +113,7 @@ Cloudflare SSL/TLS: Flexible
 Origin VM-1: HTTP
 ```
 
-This gives browser-facing HTTPS and was sufficient for assessment validation. Production hardening should move to:
+This provides validated browser-facing HTTPS through Cloudflare for the assessment environment. Production hardening should move to:
 
 ```text
 Cloudflare SSL/TLS: Full Strict

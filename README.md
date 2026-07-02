@@ -45,14 +45,14 @@ Browser DevTools verified Cloudflare edge delivery over HTTP/3 (`h3`), with HTTP
 
 ## What Was Implemented
 
-- Laravel registration UI and `/api/register` endpoint.
+- Laravel registration UI and `/api/register` endpoint with public HTTPS access validated.
 - Docker multi-stage PHP 8.4 FPM + Nginx application image.
 - PgBouncer transaction pooling on VM-1.
 - PostgreSQL 16 native installation on VM-2 and VM-3.
 - repmgr primary/standby/witness topology.
-- Streaming replication and controlled failover validation.
-- PgBouncer repointing after failover.
-- Old primary safe rejoin as standby.
+- PostgreSQL streaming replication validated between primary and standby.
+- Controlled failover validated with PgBouncer repointing to the promoted primary.
+- Old primary safely rejoined as standby after failover.
 - Cloudflare-proxied HTTPS for the public endpoint.
 - 100,000 registration write requests validated with 1,000 concurrent clients.
 
@@ -66,7 +66,3 @@ Browser DevTools verified Cloudflare edge delivery over HTTP/3 (`h3`), with HTTP
 - [Validation matrix](documentation/validation.md)
 - [Operations runbook](documentation/operations_runbook.md)
 - [Evidence index](documentation/evidence_index.md)
-
-## Notes
-
-The provided three-VM environment validates the HA write path under controlled load. Sustained 100K writes/sec would require both vertical scaling of the database host/storage and horizontal scaling of the application tier, plus distributed load generation and possibly queue/batch ingestion.

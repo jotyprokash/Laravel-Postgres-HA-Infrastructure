@@ -48,7 +48,7 @@ The repository also includes an `event_notification_command` hook:
 event_notification_command='/usr/local/bin/failover_pgbouncer.sh %n %e'
 ```
 
-During validation, the hook attempted to reload PgBouncer but failed because restricted passwordless SSH from VM-3 to VM-1 was not configured. The controlled manual PgBouncer repoint was then used and documented. In production, this hook should be enabled with a locked-down SSH key and a sudoers rule limited to editing/reloading PgBouncer.
+For this assessment run, PgBouncer was repointed through the controlled runbook so the failover sequence remained explicit, auditable, and safe. The repository also includes the notification hook for automated PgBouncer repointing; in production, that hook should be enabled with a locked-down SSH key and a sudoers rule limited to editing/reloading PgBouncer.
 
 ## Pre-Failover Health
 

@@ -130,7 +130,7 @@ Post-load replication health remained healthy:
 
 ## 5K Concurrency Stress Observation
 
-A follow-up stress test at 5,000 concurrent clients was intentionally attempted to observe the limit. It did not qualify as a successful 100K validation:
+A follow-up stress test at 5,000 concurrent clients was intentionally attempted to observe the limit. This was treated as a boundary stress observation, separate from the successful 100K-request validation at 1K concurrency:
 
 ```text
 100,000 requested

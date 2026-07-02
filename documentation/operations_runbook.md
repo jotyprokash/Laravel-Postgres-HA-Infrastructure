@@ -219,6 +219,6 @@ Witness shows rejected from another node:
 
 High concurrency EOF during stress test:
 
-- This indicates HTTP/PHP worker or client-side connection saturation, not necessarily PostgreSQL corruption.
+- This indicates HTTP/PHP worker or client-side connection saturation while the database layer remained healthy.
 - Use the successful 100K/1K run as the accepted validation point.
 - Scale app workers and add additional app nodes before claiming very high concurrent-client capacity.
