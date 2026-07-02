@@ -79,7 +79,7 @@ Cloudflare was used for proxied public HTTPS:
 app.jotysdevsecopslab.xyz -> Cloudflare proxy -> VM-1 origin
 ```
 
-The Nginx origin only serves the configured application hostname. Direct IP or unknown `Host` header requests hit the default server and are closed with Nginx `444`:
+The Nginx origin only serves the configured application hostname. Direct IP or unknown `Host` header requests hit the default server and are closed with Nginx `444` instead of returning a branded warning page:
 
 ```nginx
 server {
@@ -88,6 +88,8 @@ server {
     return 444;
 }
 ```
+
+This is intentional. Serving a warning page would confirm that the public IP is an application origin and expose more behavior to scanners. Dropping the connection reduces origin fingerprinting and keeps the supported public entrypoint limited to the Cloudflare-proxied hostname.
 
 Evidence:
 
