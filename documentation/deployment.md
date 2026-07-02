@@ -135,6 +135,8 @@ SSL/TLS mode: Flexible
 
 Cloudflare terminates public HTTPS and forwards to the VM-1 HTTP origin. For production hardening, the next step is Cloudflare Full Strict with an origin certificate or a host-level TLS proxy.
 
+Nginx is configured to serve only `app.jotysdevsecopslab.xyz`; direct IP or unknown `Host` header requests are rejected by the default server block.
+
 Domain evidence:
 
 ![Cloudflare HTTPS frontend](../evidence/screenshots/10-domain-https-frontend-cloudflare-proxied.png)

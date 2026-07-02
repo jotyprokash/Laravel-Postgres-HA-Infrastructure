@@ -79,6 +79,16 @@ Cloudflare was used for proxied public HTTPS:
 app.jotysdevsecopslab.xyz -> Cloudflare proxy -> VM-1 origin
 ```
 
+The Nginx origin only serves the configured application hostname. Direct IP or unknown `Host` header requests hit the default server and are closed with Nginx `444`:
+
+```nginx
+server {
+    listen 80 default_server;
+    server_name _;
+    return 444;
+}
+```
+
 Evidence:
 
 ![Cloudflare HTTPS frontend](../evidence/screenshots/10-domain-https-frontend-cloudflare-proxied.png)
